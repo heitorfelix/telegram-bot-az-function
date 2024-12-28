@@ -1,0 +1,6 @@
+python-telegram-bot
+azure-cognitiveservices-vision-computervision
+opencv-python
+numpy
+Pillow
+python-dotenv
