@@ -72,28 +72,29 @@ def process_image_for_ocr(img, output_dir, timestamp):
     """Apply various preprocessing techniques and save intermediate steps"""
     
     img = rotate_image_to_center(img)
+
     # 1. Convert to grayscale
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    cv2.imwrite(os.path.join(output_dir, f"{timestamp}_1_gray.png"), gray)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    cv2.imwrite(os.path.join(output_dir, f"{timestamp}_1_gray.png"), img)
 
 
     # Histogram equalization to improve contrast
-    equalized = cv2.equalizeHist(gray)
-    cv2.imwrite(os.path.join(output_dir, f"{timestamp}_21_threshold.png"), equalized)
+    img = cv2.equalizeHist(img)
+    cv2.imwrite(os.path.join(output_dir, f"{timestamp}_21_threshold.png"), img)
 
 
     # 2. Apply thresholding
-    thresh = cv2.threshold(equalized, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-    cv2.imwrite(os.path.join(output_dir, f"{timestamp}_2_threshold.png"), thresh)
+    img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    cv2.imwrite(os.path.join(output_dir, f"{timestamp}_2_threshold.png"), img)
     
     # 3. Remove noise
-    denoised = cv2.fastNlMeansDenoising(thresh)
-    cv2.imwrite(os.path.join(output_dir, f"{timestamp}_3_denoised.png"), denoised)
+    img = cv2.fastNlMeansDenoising(img)
+    cv2.imwrite(os.path.join(output_dir, f"{timestamp}_3_denoised.png"), img)
     
     # 4. Enhance contrast
-    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
-    enhanced = clahe.apply(denoised)
-    cv2.imwrite(os.path.join(output_dir, f"{timestamp}_4_enhanced.png"), enhanced)
+    img = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+    enhanced = img.apply(img)
+    cv2.imwrite(os.path.join(output_dir, f"{timestamp}_4_enhanced.png"), img)
     
     # 5. Sharpen image
     kernel = np.array([[-1,-1,-1],
